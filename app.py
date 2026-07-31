@@ -113,28 +113,31 @@ h1, h2, h3, h4, h5, h6 {
     border-right: var(--nb-border);
 }
 
-/* Header Banner: flat saturated color, hard border, hard offset shadow */
+/* Header Banner: flat saturated color, hard border, hard offset shadow.
+   Kept compact (small padding, tight line-height) so it doesn't eat
+   vertical space above the fold and force extra scrolling. */
 .main-header {
     background: var(--nb-orange);
-    padding: 1.8rem 2rem;
+    padding: 0.7rem 1.5rem;
     border-radius: 4px;
     border: var(--nb-border);
-    box-shadow: 8px 8px 0px #0a0a0a;
+    box-shadow: 5px 5px 0px #0a0a0a;
     color: var(--nb-ink);
-    margin-bottom: 2rem;
+    margin-bottom: 1rem;
 }
 
 .main-header h1 {
     color: var(--nb-ink) !important;
-    font-size: 2.3rem !important;
+    font-size: 1.5rem !important;
     font-weight: 900 !important;
-    margin-bottom: 0.3rem !important;
+    line-height: 1.2 !important;
+    margin-bottom: 0.1rem !important;
     text-transform: uppercase;
 }
 
 .main-header p {
     color: #1a1a1a !important;
-    font-size: 1.05rem !important;
+    font-size: 0.85rem !important;
     font-weight: 700 !important;
     margin: 0 !important;
 }
