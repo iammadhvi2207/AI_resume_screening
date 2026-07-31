@@ -296,6 +296,23 @@ h1, h2, h3, h4, h5, h6 {
     background: var(--nb-surface);
 }
 
+/* Compact quick-suggestion row (st.container(key="quick_prompts")) - small
+   low-emphasis buttons so they take minimal vertical space, keeping the
+   chat input visible in the initial viewport. */
+.st-key-quick_prompts {
+    margin-bottom: 0.5rem;
+}
+
+.st-key-quick_prompts button {
+    padding: 0.25rem 0.4rem !important;
+    font-size: 0.75rem !important;
+    box-shadow: 1px 1px 0px #0a0a0a !important;
+}
+
+.st-key-quick_prompts button:hover {
+    box-shadow: 2px 2px 0px #0a0a0a !important;
+}
+
 [data-testid="stChatMessage"] {
     background: var(--nb-bg);
     border: 3px solid var(--nb-ink);
@@ -1245,7 +1262,6 @@ def main():
     # ==========================================================================
     with col_right:
         st.subheader("💬 AI Career Assistant Chat")
-        st.caption("Powered by Groq LLM API • Instant Career Guidance & Resume Advice")
 
         active_ctx = st.session_state.get("active_context", {
             "job_role": selected_job_role,
@@ -1259,27 +1275,28 @@ def main():
             "resume_text": ""
         })
 
-        # Sample Preset Questions (One-click prompt suggestions)
-        st.markdown("**Quick Suggestions:**")
-        q_cols1 = st.columns(2)
-        q_cols2 = st.columns(2)
-
-        if q_cols1[0].button("💡 How to improve resume?"):
-            st.session_state.quick_prompt = "How can I improve my resume for this job role?"
-        if q_cols1[1].button("❌ Which skills are missing?"):
-            st.session_state.quick_prompt = "Which key skills am I missing for this job role?"
-        if q_cols2[0].button("🎓 Suggested certifications?"):
-            st.session_state.quick_prompt = "What certifications should I acquire to boost my chances?"
-        if q_cols2[1].button("🎯 Interview questions?"):
-            st.session_state.quick_prompt = "Suggest key interview questions and topics for this role."
-
-        st.markdown("---")
+        # Sample Preset Questions (One-click prompt suggestions) - kept to a
+        # single compact row so the chat input stays visible in the initial
+        # viewport without scrolling.
+        quick_prompts_box = st.container(key="quick_prompts")
+        with quick_prompts_box:
+            q_cols = st.columns(4)
+            if q_cols[0].button("💡 Resume"):
+                st.session_state.quick_prompt = "How can I improve my resume for this job role?"
+            if q_cols[1].button("❌ Skills"):
+                st.session_state.quick_prompt = "Which key skills am I missing for this job role?"
+            if q_cols[2].button("🎓 Certs"):
+                st.session_state.quick_prompt = "What certifications should I acquire to boost my chances?"
+            if q_cols[3].button("🎯 Interview"):
+                st.session_state.quick_prompt = "Suggest key interview questions and topics for this role."
 
         # Chat History Container: fixed-height scrollable pane (Streamlit >=1.30
         # st.container(height=...)) so only this pane scrolls, never the full
         # page, no matter how long chat_history grows. autoscroll keeps newly
-        # appended messages pinned to the bottom of the pane.
-        chat_box = st.container(height=420, border=True, key="chat_scroll_box", autoscroll=True)
+        # appended messages pinned to the bottom of the pane. Kept short
+        # enough (with the compact quick-suggestion row above) that the
+        # chat_input below stays inside the initial viewport.
+        chat_box = st.container(height=200, border=True, key="chat_scroll_box", autoscroll=True)
 
         with chat_box:
             if not st.session_state.chat_history:
