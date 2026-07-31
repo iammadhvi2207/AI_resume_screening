@@ -62,7 +62,7 @@ except ImportError:
 load_dotenv()
 
 # ==============================================================================
-# 1. PAGE CONFIGURATION & CUSTOM DARK THEME STYLING
+# 1. PAGE CONFIGURATION & NEOBRUTALIST THEME STYLING
 # ==============================================================================
 
 st.set_page_config(
@@ -72,148 +72,283 @@ st.set_page_config(
     initial_sidebar_state="expanded"
 )
 
-CUSTOM_DARK_CSS = """
+# Neobrutalist theme: stark black/white base, flat saturated accents, thick
+# solid black borders, hard offset shadows (no blur/gradients/soft pills).
+CUSTOM_NEOBRUTALIST_CSS = """
 <style>
-/* Dark Mode Core Theme */
-.stApp {
-    background-color: #0b0f19;
-    color: #e2e8f0;
-    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+:root {
+    --nb-ink: #0a0a0a;
+    --nb-bg: #f5f3ee;
+    --nb-surface: #ffffff;
+    --nb-border: 4px solid #0a0a0a;
+    --nb-shadow: 4px 4px 0px #0a0a0a;
+    --nb-shadow-sm: 2px 2px 0px #0a0a0a;
+    --nb-yellow: #ffd400;
+    --nb-blue: #3d5afe;
+    --nb-green: #00c853;
+    --nb-red: #ff3b30;
+    --nb-pink: #ff3ea5;
+    --nb-cyan: #00b8d9;
 }
 
-/* Header Styling */
+/* Core Theme: stark white/black base, no gradients anywhere */
+.stApp {
+    background-color: var(--nb-bg);
+    color: var(--nb-ink);
+    font-family: 'Arial Black', 'Helvetica Neue', Arial, system-ui, sans-serif;
+}
+
+.stApp, .stApp p, .stApp span, .stApp label, .stApp li {
+    color: var(--nb-ink);
+}
+
+h1, h2, h3, h4, h5, h6 {
+    font-weight: 900 !important;
+    letter-spacing: 0 !important;
+    color: var(--nb-ink) !important;
+}
+
+[data-testid="stSidebar"] {
+    background-color: var(--nb-surface);
+    border-right: var(--nb-border);
+}
+
+/* Header Banner: flat saturated color, hard border, hard offset shadow */
 .main-header {
-    background: linear-gradient(135deg, #1e1b4b 0%, #312e81 50%, #4338ca 100%);
+    background: var(--nb-yellow);
     padding: 1.8rem 2rem;
-    border-radius: 16px;
-    color: white;
+    border-radius: 4px;
+    border: var(--nb-border);
+    box-shadow: 8px 8px 0px #0a0a0a;
+    color: var(--nb-ink);
     margin-bottom: 2rem;
-    box-shadow: 0 10px 25px -5px rgba(67, 56, 202, 0.4);
-    border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 .main-header h1 {
-    color: #ffffff !important;
+    color: var(--nb-ink) !important;
     font-size: 2.3rem !important;
-    font-weight: 800 !important;
+    font-weight: 900 !important;
     margin-bottom: 0.3rem !important;
+    text-transform: uppercase;
 }
 
 .main-header p {
-    color: #c7d2fe !important;
+    color: #1a1a1a !important;
     font-size: 1.05rem !important;
+    font-weight: 700 !important;
     margin: 0 !important;
 }
 
 /* Card Containers */
 .css-card {
-    background: #1e293b;
-    border: 1px solid #334155;
-    border-radius: 14px;
+    background: var(--nb-surface);
+    border: var(--nb-border);
+    border-radius: 4px;
     padding: 1.2rem 1.5rem;
     margin-bottom: 1.2rem;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+    box-shadow: var(--nb-shadow);
 }
 
 /* Metric Display Cards */
 .metric-box {
-    background: linear-gradient(145deg, #1e293b 0%, #0f172a 100%);
-    border: 1px solid #334155;
-    border-radius: 12px;
+    background: var(--nb-surface);
+    border: var(--nb-border);
+    border-radius: 4px;
     padding: 1.1rem;
     text-align: center;
-    color: #f8fafc;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.25);
+    color: var(--nb-ink);
+    box-shadow: var(--nb-shadow);
 }
 
 .metric-box h4 {
-    color: #94a3b8;
+    color: var(--nb-ink);
     font-size: 0.85rem;
+    font-weight: 800;
     text-transform: uppercase;
-    letter-spacing: 0.05em;
+    letter-spacing: 0;
     margin-bottom: 0.4rem;
 }
 
 .metric-box .val-high {
     font-size: 1.9rem;
-    font-weight: 800;
-    color: #38bdf8;
+    font-weight: 900;
+    color: var(--nb-blue);
 }
 
 .metric-box .val-hire {
     font-size: 1.9rem;
-    font-weight: 800;
-    color: #34d399;
+    font-weight: 900;
+    color: var(--nb-green);
 }
 
 .metric-box .val-reject {
     font-size: 1.9rem;
-    font-weight: 800;
-    color: #f87171;
+    font-weight: 900;
+    color: var(--nb-red);
 }
 
-/* Skill Pills */
+/* Native Streamlit metric widgets (sidebar stats) */
+[data-testid="stMetric"] {
+    background: var(--nb-surface);
+    border: var(--nb-border);
+    border-radius: 4px;
+    padding: 0.8rem;
+    box-shadow: var(--nb-shadow-sm);
+}
+
+/* Skill Pills: flat saturated fills, hard borders, sharp corners */
 .skill-pill-matched {
-    background-color: rgba(16, 185, 129, 0.2);
-    color: #34d399;
-    border: 1px solid #059669;
+    background-color: var(--nb-green);
+    color: var(--nb-ink);
+    border: 3px solid var(--nb-ink);
     padding: 5px 12px;
-    border-radius: 20px;
+    border-radius: 4px;
     font-size: 0.85rem;
     margin: 3px;
     display: inline-block;
-    font-weight: 600;
+    font-weight: 800;
+    box-shadow: var(--nb-shadow-sm);
 }
 
 .skill-pill-missing {
-    background-color: rgba(239, 68, 68, 0.2);
-    color: #f87171;
-    border: 1px solid #dc2626;
+    background-color: var(--nb-red);
+    color: #ffffff;
+    border: 3px solid var(--nb-ink);
     padding: 5px 12px;
-    border-radius: 20px;
+    border-radius: 4px;
     font-size: 0.85rem;
     margin: 3px;
     display: inline-block;
-    font-weight: 600;
+    font-weight: 800;
+    box-shadow: var(--nb-shadow-sm);
 }
 
 .skill-pill-general {
-    background-color: rgba(56, 189, 248, 0.2);
-    color: #38bdf8;
-    border: 1px solid #0284c7;
+    background-color: var(--nb-cyan);
+    color: var(--nb-ink);
+    border: 3px solid var(--nb-ink);
     padding: 5px 12px;
-    border-radius: 20px;
+    border-radius: 4px;
     font-size: 0.85rem;
     margin: 3px;
     display: inline-block;
-    font-weight: 600;
+    font-weight: 800;
+    box-shadow: var(--nb-shadow-sm);
 }
 
 /* Legend Box */
 .legend-item {
+    background: var(--nb-surface);
     padding: 6px 12px;
-    border-radius: 8px;
+    border-radius: 4px;
+    border: 3px solid var(--nb-ink);
     font-size: 0.85rem;
+    font-weight: 700;
     margin-bottom: 6px;
-    font-weight: 500;
+    box-shadow: var(--nb-shadow-sm);
 }
 
-.legend-excellent { background: rgba(52, 211, 153, 0.15); border-left: 4px solid #34d399; color: #34d399; }
-.legend-good { background: rgba(56, 189, 248, 0.15); border-left: 4px solid #38bdf8; color: #38bdf8; }
-.legend-moderate { background: rgba(251, 191, 36, 0.15); border-left: 4px solid #fbbf24; color: #fbbf24; }
-.legend-weak { background: rgba(248, 113, 113, 0.15); border-left: 4px solid #f87171; color: #f87171; }
+.legend-excellent { border-left: 8px solid var(--nb-green); color: var(--nb-ink); }
+.legend-good { border-left: 8px solid var(--nb-blue); color: var(--nb-ink); }
+.legend-moderate { border-left: 8px solid var(--nb-yellow); color: var(--nb-ink); }
+.legend-weak { border-left: 8px solid var(--nb-red); color: var(--nb-ink); }
 
 /* Custom Chat Container */
 .chat-container {
-    background-color: #1e293b;
-    border: 1px solid #334155;
-    border-radius: 12px;
+    background-color: var(--nb-surface);
+    border: var(--nb-border);
+    border-radius: 4px;
     padding: 1rem;
+    box-shadow: var(--nb-shadow);
+}
+
+/* Fixed-height scrollable chat pane (st.container(key="chat_scroll_box")) */
+.st-key-chat_scroll_box {
+    border: var(--nb-border) !important;
+    border-radius: 4px !important;
+    box-shadow: var(--nb-shadow);
+    background: var(--nb-surface);
+}
+
+[data-testid="stChatMessage"] {
+    background: var(--nb-bg);
+    border: 3px solid var(--nb-ink);
+    border-radius: 4px;
+    box-shadow: var(--nb-shadow-sm);
+    margin-bottom: 0.6rem;
+    padding: 0.4rem 0.6rem;
+}
+
+/* Buttons: hard border + offset shadow, pressed state on hover/active (no opacity fades) */
+.stButton > button,
+.stDownloadButton > button {
+    background: var(--nb-yellow);
+    color: var(--nb-ink);
+    border: 3px solid var(--nb-ink) !important;
+    border-radius: 4px !important;
+    font-weight: 800;
+    box-shadow: var(--nb-shadow-sm);
+    transition: transform 0.05s ease, box-shadow 0.05s ease;
+}
+
+.stButton > button:hover,
+.stDownloadButton > button:hover {
+    background: var(--nb-yellow);
+    color: var(--nb-ink);
+    box-shadow: 5px 5px 0px #0a0a0a;
+    transform: translate(-1px, -1px);
+}
+
+.stButton > button:active,
+.stDownloadButton > button:active,
+.stButton > button:focus:active {
+    box-shadow: 0px 0px 0px #0a0a0a;
+    transform: translate(2px, 2px);
+}
+
+.stDownloadButton > button[kind="primary"] {
+    background: var(--nb-green);
+}
+
+/* Inputs, selects, uploaders, chat input: sharp hard borders, no soft focus glow */
+.stTextInput input,
+.stTextArea textarea,
+.stSelectbox div[data-baseweb="select"] > div,
+[data-testid="stSelectbox"] div[role="group"],
+[data-testid="stFileUploader"] section,
+[data-testid="stChatInput"] {
+    background: var(--nb-surface) !important;
+    border: 3px solid var(--nb-ink) !important;
+    border-radius: 4px !important;
+    box-shadow: var(--nb-shadow-sm);
+    color: var(--nb-ink) !important;
+}
+
+/* Tabs & Expanders */
+[data-testid="stExpander"] {
+    border: 3px solid var(--nb-ink) !important;
+    border-radius: 4px !important;
+    box-shadow: var(--nb-shadow-sm);
+}
+
+.stTabs [data-baseweb="tab-list"] {
+    border-bottom: 3px solid var(--nb-ink);
+}
+
+.stTabs [data-baseweb="tab"] {
+    font-weight: 800;
+}
+
+.stTabs [aria-selected="true"] {
+    background-color: var(--nb-yellow) !important;
+    border: 3px solid var(--nb-ink) !important;
+    border-bottom: none !important;
+    border-radius: 4px 4px 0 0 !important;
 }
 </style>
 """
 
-st.markdown(CUSTOM_DARK_CSS, unsafe_allow_html=True)
+st.markdown(CUSTOM_NEOBRUTALIST_CSS, unsafe_allow_html=True)
 
 # ==============================================================================
 # 2. DATASET LOADER & FALLBACK GENERATOR
@@ -740,7 +875,7 @@ CANDIDATE PROFILE CONTEXT:
 - Matching Skills: {', '.join(context.get('matching_skills', [])) if context.get('matching_skills') else 'None'}
 - Missing Skills: {', '.join(context.get('missing_skills', [])) if context.get('missing_skills') else 'None'}
 - Experience: {context.get('experience', 0)} Years
-- Education: {context.get('education', 'Bachelor\'s')}
+- Education: {context.get('education', "Bachelor's")}
 - Certifications: {context.get('certifications', 'None')}
 
 GUIDELINES:
@@ -832,8 +967,21 @@ def main():
     # SIDEBAR COMPONENT
     # ==========================================================================
     with st.sidebar:
-        # Load API key behind the scenes from environment
-        api_key = os.getenv("GROQ_API_KEY", "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")
+        # Groq API Key: prefer environment variable (.env / host secrets),
+        # fall back to a manual entry field so the key is never hardcoded.
+        st.subheader("🔑 Groq API Key")
+        env_api_key = os.getenv("GROQ_API_KEY", "")
+        if env_api_key:
+            st.success("Groq API Key loaded from environment.")
+            api_key = env_api_key
+        else:
+            api_key = st.text_input(
+                "Enter your Groq API Key:",
+                type="password",
+                help="Get a free key at console.groq.com/keys. Set GROQ_API_KEY in a .env file to skip this."
+            )
+
+        st.markdown("---")
 
         # Dataset Statistics
         st.subheader("📊 Dataset Statistics")
@@ -1082,10 +1230,15 @@ def main():
 
         st.markdown("---")
 
-        # Chat History Container
-        chat_box = st.container()
+        # Chat History Container: fixed-height scrollable pane (Streamlit >=1.30
+        # st.container(height=...)) so only this pane scrolls, never the full
+        # page, no matter how long chat_history grows. autoscroll keeps newly
+        # appended messages pinned to the bottom of the pane.
+        chat_box = st.container(height=420, border=True, key="chat_scroll_box", autoscroll=True)
 
         with chat_box:
+            if not st.session_state.chat_history:
+                st.caption("👋 Ask a question above or click a quick suggestion to start the conversation.")
             for message in st.session_state.chat_history:
                 with st.chat_message(message["role"]):
                     st.markdown(message["content"])
@@ -1101,22 +1254,20 @@ def main():
             st.session_state.quick_prompt = None
 
         if prompt_to_send:
-            # Display user message
+            # Append the exchange to session state, then rerun so the pane
+            # above (already rendered this run) picks up the new messages on
+            # the next run instead of them flashing outside the scroll box.
             st.session_state.chat_history.append({"role": "user", "content": prompt_to_send})
-            with st.chat_message("user"):
-                st.markdown(prompt_to_send)
 
-            # Generate Groq LLM Response
-            with st.chat_message("assistant"):
-                with st.spinner("AI Assistant is analyzing resume & generating advice..."):
-                    groq_reply = query_groq_assistant(
-                        prompt=prompt_to_send,
-                        context=active_ctx,
-                        chat_history=st.session_state.chat_history,
-                        api_key=api_key
-                    )
-                    st.markdown(groq_reply)
-                    st.session_state.chat_history.append({"role": "assistant", "content": groq_reply})
+            with st.spinner("AI Assistant is analyzing resume & generating advice..."):
+                groq_reply = query_groq_assistant(
+                    prompt=prompt_to_send,
+                    context=active_ctx,
+                    chat_history=st.session_state.chat_history,
+                    api_key=api_key
+                )
+            st.session_state.chat_history.append({"role": "assistant", "content": groq_reply})
+            st.rerun()
 
     # ==========================================================================
     # VISUALIZATION SECTION: DATASET & TALENT ANALYTICS CHARTS (PLOTLY)
