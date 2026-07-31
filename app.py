@@ -78,27 +78,27 @@ CUSTOM_NEOBRUTALIST_CSS = """
 <style>
 :root {
     --nb-ink: #0a0a0a;
-    --nb-bg: #f5f3ee;
+    --nb-bg: #ffdd9c;
     --nb-surface: #ffffff;
     --nb-border: 4px solid #0a0a0a;
     --nb-shadow: 4px 4px 0px #0a0a0a;
     --nb-shadow-sm: 2px 2px 0px #0a0a0a;
-    --nb-yellow: #ffd400;
-    --nb-blue: #3d5afe;
-    --nb-green: #00c853;
-    --nb-red: #ff3b30;
-    --nb-pink: #ff3ea5;
-    --nb-cyan: #00b8d9;
+    /* Brand palette - all body text on these is black (verified >=5:1 contrast) */
+    --nb-red: #e73f1e;
+    --nb-orange: #fb6c00;
+    --nb-amber: #f9b637;
+    --nb-cream: #ffdd9c;
 }
 
-/* Core Theme: stark white/black base, no gradients anywhere */
+/* Core Theme: warm cream base with white content islands, no gradients anywhere */
 .stApp {
     background-color: var(--nb-bg);
     color: var(--nb-ink);
     font-family: 'Arial Black', 'Helvetica Neue', Arial, system-ui, sans-serif;
 }
 
-.stApp, .stApp p, .stApp span, .stApp label, .stApp li {
+.stApp, .stApp p, .stApp span, .stApp label, .stApp li,
+.stApp input, .stApp textarea, .stApp button {
     color: var(--nb-ink);
 }
 
@@ -115,7 +115,7 @@ h1, h2, h3, h4, h5, h6 {
 
 /* Header Banner: flat saturated color, hard border, hard offset shadow */
 .main-header {
-    background: var(--nb-yellow);
+    background: var(--nb-orange);
     padding: 1.8rem 2rem;
     border-radius: 4px;
     border: var(--nb-border);
@@ -169,23 +169,24 @@ h1, h2, h3, h4, h5, h6 {
     margin-bottom: 0.4rem;
 }
 
-.metric-box .val-high {
-    font-size: 1.9rem;
-    font-weight: 900;
-    color: var(--nb-blue);
-}
-
-.metric-box .val-hire {
-    font-size: 1.9rem;
-    font-weight: 900;
-    color: var(--nb-green);
-}
-
+/* Values render as solid color chips (black text on flat accent) rather than
+   colored text on white - colored text on a white card fails contrast for
+   these bright accents, filled chips keep every value easily readable. */
+.metric-box .val-high,
+.metric-box .val-hire,
 .metric-box .val-reject {
-    font-size: 1.9rem;
+    display: inline-block;
+    font-size: 1.5rem;
     font-weight: 900;
-    color: var(--nb-red);
+    color: var(--nb-ink);
+    padding: 0.15rem 0.6rem;
+    border: 2px solid var(--nb-ink);
+    border-radius: 4px;
 }
+
+.metric-box .val-high { background: var(--nb-orange); }
+.metric-box .val-hire { background: var(--nb-amber); }
+.metric-box .val-reject { background: var(--nb-red); }
 
 /* Native Streamlit metric widgets (sidebar stats) */
 [data-testid="stMetric"] {
@@ -196,9 +197,12 @@ h1, h2, h3, h4, h5, h6 {
     box-shadow: var(--nb-shadow-sm);
 }
 
-/* Skill Pills: flat saturated fills, hard borders, sharp corners */
+/* Skill Pills: flat saturated fills, hard borders, sharp corners.
+   Black text on every fill - at these sizes (0.85rem) the accent colors
+   fall well under 4.5:1 contrast as text, but clear 4.8-11:1 as backgrounds
+   with black text/border, so pills are always filled chips, never colored text. */
 .skill-pill-matched {
-    background-color: var(--nb-green);
+    background-color: var(--nb-amber);
     color: var(--nb-ink);
     border: 3px solid var(--nb-ink);
     padding: 5px 12px;
@@ -212,7 +216,7 @@ h1, h2, h3, h4, h5, h6 {
 
 .skill-pill-missing {
     background-color: var(--nb-red);
-    color: #ffffff;
+    color: var(--nb-ink);
     border: 3px solid var(--nb-ink);
     padding: 5px 12px;
     border-radius: 4px;
@@ -224,7 +228,7 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 .skill-pill-general {
-    background-color: var(--nb-cyan);
+    background-color: var(--nb-cream);
     color: var(--nb-ink);
     border: 3px solid var(--nb-ink);
     padding: 5px 12px;
@@ -248,9 +252,9 @@ h1, h2, h3, h4, h5, h6 {
     box-shadow: var(--nb-shadow-sm);
 }
 
-.legend-excellent { border-left: 8px solid var(--nb-green); color: var(--nb-ink); }
-.legend-good { border-left: 8px solid var(--nb-blue); color: var(--nb-ink); }
-.legend-moderate { border-left: 8px solid var(--nb-yellow); color: var(--nb-ink); }
+.legend-excellent { border-left: 8px solid var(--nb-cream); color: var(--nb-ink); }
+.legend-good { border-left: 8px solid var(--nb-amber); color: var(--nb-ink); }
+.legend-moderate { border-left: 8px solid var(--nb-orange); color: var(--nb-ink); }
 .legend-weak { border-left: 8px solid var(--nb-red); color: var(--nb-ink); }
 
 /* Custom Chat Container */
@@ -282,18 +286,18 @@ h1, h2, h3, h4, h5, h6 {
 /* Buttons: hard border + offset shadow, pressed state on hover/active (no opacity fades) */
 .stButton > button,
 .stDownloadButton > button {
-    background: var(--nb-yellow);
+    background: var(--nb-amber);
     color: var(--nb-ink);
     border: 3px solid var(--nb-ink) !important;
     border-radius: 4px !important;
     font-weight: 800;
     box-shadow: var(--nb-shadow-sm);
-    transition: transform 0.05s ease, box-shadow 0.05s ease;
+    transition: transform 0.05s ease, box-shadow 0.05s ease, background 0.05s ease;
 }
 
 .stButton > button:hover,
 .stDownloadButton > button:hover {
-    background: var(--nb-yellow);
+    background: var(--nb-orange);
     color: var(--nb-ink);
     box-shadow: 5px 5px 0px #0a0a0a;
     transform: translate(-1px, -1px);
@@ -307,14 +311,17 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 .stDownloadButton > button[kind="primary"] {
-    background: var(--nb-green);
+    background: var(--nb-orange);
 }
 
-/* Inputs, selects, uploaders, chat input: sharp hard borders, no soft focus glow */
+/* Inputs, selects, uploaders, chat input: sharp hard borders, no soft focus glow.
+   Text/value color is forced everywhere - Streamlit's own combobox input was
+   otherwise inheriting a low-contrast grey and reading as blank. */
 .stTextInput input,
 .stTextArea textarea,
 .stSelectbox div[data-baseweb="select"] > div,
 [data-testid="stSelectbox"] div[role="group"],
+[data-testid="stSelectbox"] input,
 [data-testid="stFileUploader"] section,
 [data-testid="stChatInput"] {
     background: var(--nb-surface) !important;
@@ -322,6 +329,13 @@ h1, h2, h3, h4, h5, h6 {
     border-radius: 4px !important;
     box-shadow: var(--nb-shadow-sm);
     color: var(--nb-ink) !important;
+    -webkit-text-fill-color: var(--nb-ink) !important;
+}
+
+[data-testid="stSelectbox"] input::placeholder,
+.stTextInput input::placeholder {
+    color: #4a4a4a !important;
+    opacity: 1 !important;
 }
 
 /* Tabs & Expanders */
@@ -340,7 +354,7 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 .stTabs [aria-selected="true"] {
-    background-color: var(--nb-yellow) !important;
+    background-color: var(--nb-amber) !important;
     border: 3px solid var(--nb-ink) !important;
     border-bottom: none !important;
     border-radius: 4px 4px 0 0 !important;
