@@ -188,13 +188,32 @@ h1, h2, h3, h4, h5, h6 {
 .metric-box .val-hire { background: var(--nb-amber); }
 .metric-box .val-reject { background: var(--nb-red); }
 
-/* Native Streamlit metric widgets (sidebar stats) */
+/* Native Streamlit metric widgets (sidebar stats + qualification cards).
+   Streamlit truncates long values with an ellipsis by default (nowrap +
+   overflow hidden) - overridden here to wrap instead of cutting off text
+   like "AWS Certified Solutions Architect" or "Bachelor's". */
 [data-testid="stMetric"] {
     background: var(--nb-surface);
     border: var(--nb-border);
     border-radius: 4px;
     padding: 0.8rem;
     box-shadow: var(--nb-shadow-sm);
+    height: auto;
+}
+
+[data-testid="stMetricValue"],
+[data-testid="stMetricLabel"],
+[data-testid="stMetricValue"] p,
+[data-testid="stMetricLabel"] p {
+    white-space: normal !important;
+    overflow: visible !important;
+    text-overflow: unset !important;
+    word-break: break-word;
+}
+
+[data-testid="stMetricValue"] {
+    font-size: 1.4rem !important;
+    line-height: 1.25;
 }
 
 /* Skill Pills: flat saturated fills, hard borders, sharp corners.
@@ -323,7 +342,9 @@ h1, h2, h3, h4, h5, h6 {
 [data-testid="stSelectbox"] div[role="group"],
 [data-testid="stSelectbox"] input,
 [data-testid="stFileUploader"] section,
-[data-testid="stChatInput"] {
+[data-testid="stChatInput"],
+[data-testid="stChatInput"] textarea,
+[data-testid="stChatInputTextArea"] {
     background: var(--nb-surface) !important;
     border: 3px solid var(--nb-ink) !important;
     border-radius: 4px !important;
@@ -332,10 +353,17 @@ h1, h2, h3, h4, h5, h6 {
     -webkit-text-fill-color: var(--nb-ink) !important;
 }
 
+[data-testid="stChatInput"] {
+    box-shadow: none;
+}
+
 [data-testid="stSelectbox"] input::placeholder,
-.stTextInput input::placeholder {
+.stTextInput input::placeholder,
+[data-testid="stChatInput"] textarea::placeholder,
+[data-testid="stChatInputTextArea"]::placeholder {
     color: #4a4a4a !important;
     opacity: 1 !important;
+    -webkit-text-fill-color: #4a4a4a !important;
 }
 
 /* Tabs & Expanders */
@@ -1094,7 +1122,7 @@ def main():
                 m1, m2, m3, m4 = st.columns(4)
                 m1.metric("Experience", f"{exp_years:.1f} Yrs")
                 m2.metric("Education", edu_level)
-                m3.metric("Certifications", certifications if len(certifications) < 20 else certifications[:18] + "...")
+                m3.metric("Certifications", certifications)
                 m4.metric("Projects Count", projects_count)
 
                 st.markdown("---")
